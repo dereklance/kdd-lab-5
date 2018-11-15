@@ -1,27 +1,44 @@
 from pathlib import Path
-from collections import Counter
+from collections import Counter, defaultdict
+from porterStemmer import PorterStemmer
 import sys
 
-def parseDocuments(dataDirectory):
-	filePaths = (str(path) for path in Path(dataDirectory).glob('**/*.txt'))
-	summedCounts = Counter()
+def strip_word(word):
+	return word.strip(',"()[]<>?.{}+=`~\n').lower()
+
+def get_stop_words(path):
+	stop_words = set()
+	with open(path, 'r') as stop_words_file:
+		for word in stop_words_file:
+			stop_words.add(strip_word(word))
+
+	return stop_words
+
+def stemmed(word):
+	return PorterStemmer().stem(word, 0, len(word) - 1)
+
+def parse_documents(data_directory, stop_words_file):
+	file_paths = (str(path) for path in Path(data_directory).glob('**/*.txt'))
+	stop_words = get_stop_words(stop_words_file)
+	
+	total_word_counts = defaultdict(int)
+	all_document_word_counts = dict() # of total_word_counts like dicts
 
 	with open('groundTruths.txt', 'w') as outputFile:
-		for path in filePaths:
+		for path in file_paths:
 			[author, article] = path.split('/')[-2:]
 			outputFile.write(f'{article},{author}\n')
 			
 			with open(path, 'r') as document:
-				tokens = document.read().split()
-				tokens = list(map(lambda token: token.strip(',"()[]<>?.{}+=`~').lower(), tokens))
-				summedCounts += Counter(tokens)
-		
-		print(len(summedCounts))
+				document_word_counts = defaultdict(int)
+				for token in document.read().split():
+					token = strip_word(token) # Strip unecessary punctuation
+					if not (token in stop_words): # Remove stop words
+						token = stemmed(token) # Apply stemming
 
-def main():
-	dataDirectory = sys.argv[1]
+						document_word_counts[token] += 1
+						total_word_counts[token] += 1
 
-	parseDocuments(dataDirectory)
+				all_document_word_counts[article] = document_word_counts
 
-if __name__ == '__main__':
-	main()
+	return all_document_word_counts, total_word_counts
