@@ -20,9 +20,10 @@ def stemmed(word):
 def parse_documents(data_directory, stop_words_file):
 	file_paths = (str(path) for path in Path(data_directory).glob('**/*.txt'))
 	stop_words = get_stop_words(stop_words_file)
-	
-	total_word_counts = defaultdict(int)
-	all_document_word_counts = dict() # of total_word_counts like dicts
+
+	total_term_frequencies = defaultdict(int)
+	document_frequencies = defaultdict(int)
+	all_document_term_frequencies = dict() # of total_term_frequencies like dicts
 
 	with open('groundTruths.txt', 'w') as outputFile:
 		for path in file_paths:
@@ -30,15 +31,21 @@ def parse_documents(data_directory, stop_words_file):
 			outputFile.write(f'{article},{author}\n')
 			
 			with open(path, 'r') as document:
-				document_word_counts = defaultdict(int)
+				visited_terms = set()
+				document_term_frequencies = defaultdict(int)
 				for token in document.read().split():
 					token = strip_word(token) # Strip unecessary punctuation
 					if not (token in stop_words): # Remove stop words
 						token = stemmed(token) # Apply stemming
+						
+						# Compute document frequencies
+						if not token in visited_terms:
+							document_frequencies[token] += 1
+							visited_terms.add(token)
 
-						document_word_counts[token] += 1
-						total_word_counts[token] += 1
+						document_term_frequencies[token] += 1
+						total_term_frequencies[token] += 1
 
-				all_document_word_counts[article] = document_word_counts
+				all_document_term_frequencies[article] = document_term_frequencies
 
-	return all_document_word_counts, total_word_counts
+	return all_document_term_frequencies, total_term_frequencies, document_frequencies
