@@ -2,6 +2,10 @@ import math
 import os
 from scipy import spatial
 
+# Basically just takes in dictionaries of term frequencies for a 
+# specific document, as well as total term frequencies, and document frequencies
+# and creates a tf-idf vector from it for a given file.
+# Also has static methods for comparing vectors.
 class Vector:
 
 	def __init__(self, document_path, term_frequencies, total_term_frequencies, document_frequencies):
