@@ -1,6 +1,7 @@
 import math
 import os
 import glob
+import csv
 from sys import stdout
 from scipy import spatial
 
@@ -15,14 +16,15 @@ class Vector:
 
 		with open(document_path, 'r') as input_file:
 			self.document_size = os.path.getsize(document_path)
-			for i, line in enumerate(input_file):
-				if i == 0:
-					self.document_path = line
-				elif i > 1:
-					[term, tfidf, document_term_frequency] = line.split(" ")[:]
-					self.tfidf_vector.append(tfidf)
-					self.tfidf_vector_with_term.append((term, tfidf))
-					self.term_frequencies[term] = document_term_frequency
+
+			csvreader = csv.reader(input_file, delimiter=' ')
+			self.document_path = next(csvreader, None) # Get path
+			next(csvreader, None) # Skip header line
+
+			for [term, tfidf, document_term_frequency] in csvreader:
+				self.tfidf_vector.append(tfidf)
+				self.tfidf_vector_with_term.append((term, tfidf))
+				self.term_frequencies[term] = document_term_frequency
 
 	@staticmethod
 	def cosine_similarity(vector1, vector2):
