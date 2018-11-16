@@ -2,6 +2,7 @@ from pathlib import Path
 from collections import Counter, defaultdict
 from porterStemmer import PorterStemmer
 import sys
+import os
 
 def strip_word(word):
 	return word.strip(',"()[]<>?.{}+=`~\n').lower()
@@ -24,11 +25,13 @@ def parse_documents(data_directory, stop_words_file):
 	total_term_frequencies = defaultdict(int)
 	document_frequencies = defaultdict(int)
 	all_document_term_frequencies = dict() # of total_term_frequencies like dicts
+	total_documents_size = 0
 
 	with open('groundTruths.txt', 'w') as outputFile:
 		for path in file_paths:
 			[author, article] = path.split('/')[-2:]
 			outputFile.write(f'{article},{author}\n')
+			total_documents_size += os.path.getsize(path)
 			
 			with open(path, 'r') as document:
 				visited_terms = set()
@@ -48,4 +51,5 @@ def parse_documents(data_directory, stop_words_file):
 
 				all_document_term_frequencies[article] = document_term_frequencies
 
-	return all_document_term_frequencies, total_term_frequencies, document_frequencies
+	return all_document_term_frequencies, total_term_frequencies, \
+		document_frequencies, (total_documents_size / len(file_paths))

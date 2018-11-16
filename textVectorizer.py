@@ -9,8 +9,8 @@ def main():
 	stop_words_filename = sys.argv[3]
 
 	# Parse documents
-	document_term_frequencies, total_term_frequencies, document_frequencies = \
-		parse_documents(data_directory, stop_words_filename)
+	document_term_frequencies, total_term_frequencies, document_frequencies, \
+		average_document_size = parse_documents(data_directory, stop_words_filename)
 
 	# Construct Vector objects
 	vectors = dict()
