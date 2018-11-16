@@ -28,7 +28,7 @@ def main():
 	# Create document specific term frequency files
 	for document_path, term_frequencies in document_term_frequencies.items():
 		[author, article] = document_path.split('/')[-2:]
-		with open("./output/" + article, "w") as output:
+		with open("./output/documents/" + article, "w") as output:
 			output.write(f'{document_path} \n')
 			output.write("term tf-idf document_term_frequency\n")
 

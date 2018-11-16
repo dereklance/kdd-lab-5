@@ -1,12 +1,13 @@
 import math
 import os
+import glob
+from sys import stdout
 from scipy import spatial
 
 # Takes in a file with document path as the first line
 # and then rows with columns labeled: term tfidf document_term_frequency
 # and generates an object representation of these for comparing
 class Vector:
-
 	def __init__(self, document_path):
 		self.tfidf_vector = []
 		self.tfidf_vector_with_term = []
@@ -14,11 +15,10 @@ class Vector:
 
 		with open(document_path, 'r') as input_file:
 			self.document_size = os.path.getsize(document_path)
-			line_num = 0
-			for line in input_file:
-				if line_num == 0:
+			for i, line in enumerate(input_file):
+				if i == 0:
 					self.document_path = line
-				elif line_num > 1:
+				elif i > 1:
 					[term, tfidf, document_term_frequency] = line.split(" ")[:]
 					self.tfidf_vector.append(tfidf)
 					self.tfidf_vector_with_term.append((term, tfidf))
@@ -44,3 +44,13 @@ class Vector:
 				 (k2 + vector2.term_frequencies[term]))
 			)
 		return okapi_sum
+
+def construct_vectors():
+	vectors = []
+	print("Constructing vectors...")
+	for i, vector_file_path in enumerate(glob.glob("./output/documents/*.txt")):
+		stdout.write("\rProgress: %d/2500" % (i + 1))
+		stdout.flush()
+		vectors.append(Vector(vector_file_path))
+	stdout.write("\nDone\n")
+	return vectors
