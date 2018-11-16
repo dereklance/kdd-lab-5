@@ -18,12 +18,12 @@ class Vector:
 			self.document_size = os.path.getsize(document_path)
 
 			csvreader = csv.reader(input_file, delimiter=' ')
-			self.document_path = next(csvreader, None) # Get path
+			self.document_path = next(csvreader, None)[0] # Get path
 			next(csvreader, None) # Skip header line
 
 			for [term, tfidf, document_term_frequency] in csvreader:
-				self.tfidf_vector.append(tfidf)
-				self.tfidf_vector_with_term.append((term, tfidf))
+				self.tfidf_vector.append(float(tfidf))
+				self.tfidf_vector_with_term.append((term, float(tfidf)))
 				self.term_frequencies[term] = document_term_frequency
 
 	@staticmethod
@@ -47,7 +47,8 @@ class Vector:
 			)
 		return okapi_sum
 
-def construct_vectors():
+# Use limit for testing purposes only
+def construct_vectors(limit = None):
 	vectors = []
 	print("Constructing vectors...")
 	files = glob.glob("./output/documents/*.txt")
@@ -55,5 +56,7 @@ def construct_vectors():
 		stdout.write(f"\rProgress: {(i + 1)}/{len(files)}")
 		stdout.flush()
 		vectors.append(Vector(vector_file_path))
+		if limit and i >= limit:
+			break
 	stdout.write("\nDone\n")
 	return vectors
