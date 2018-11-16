@@ -51,7 +51,7 @@ class Vector:
 def construct_vectors(limit = None):
 	vectors = []
 	print("Constructing vectors...")
-	files = glob.glob("./output/documents/*.txt")
+	files = glob.glob("./output/documents/**/*.txt")
 	for i, vector_file_path in enumerate(files):
 		stdout.write(f"\rProgress: {(i + 1)}/{len(files)}")
 		stdout.flush()
