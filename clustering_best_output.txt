@@ -246,5 +246,5 @@ LynnleyBrowning: 12.0%
 JimGilchrist: 100.0%
 MatthewBunce: 80.0%
 
-Average Author Accuracy: 0.2701931069248759
+Average Author Accuracy: 27.01931069248759%
 Total Accuracy: 66.20030777077373%
