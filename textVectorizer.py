@@ -13,8 +13,7 @@ def calculate_tf_idf(term, document_term_frequencies, total_term_frequencies, do
 
 def main():
 	data_directory = sys.argv[1]
-	test_or_train = sys.argv[2]
-	stop_words_filename = sys.argv[3]
+	stop_words_filename = sys.argv[2]
 
 	# Parse documents
 	document_term_frequencies, total_term_frequencies, document_frequencies, \
@@ -29,7 +28,7 @@ def main():
 	# Create document specific term frequency files
 	for document_path, term_frequencies in document_term_frequencies.items():
 		[author, article] = document_path.split('/')[-2:]
-		with open(f"./output/documents/{test_or_train}/" + article, "w") as output:
+		with open(f"./output/documents/" + article, "w") as output:
 			output.write(f'{document_path} \n')
 			output.write("term tf-idf document_term_frequency\n")
 

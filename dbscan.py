@@ -130,18 +130,24 @@ def outputClusterData(clusters, centroids):
 		print(f'Min Dist. to Center: {stats["min"]}')
 		print(f'Avg Dist. to Center: {stats["avg"]}')
 		print(f'Sum Squared Error: {stats["sse"]}')
-		print(f'{len(cluster)} Points:')
+		#print(f'{len(cluster)} Points:')
 
-		for dataPoint in cluster:
-			print(', '.join(map(str, dataPoint)))
+		#for dataPoint in cluster:
+		#	print(', '.join(map(str, dataPoint)))
 		print()
 
 def outputOutlierData(outliers, numDataPoints):
 	print('Outliers:')
 	print('Percentage of data:', round(len(outliers) / numDataPoints * 100, 2))
-	print(len(outliers), 'Points:')
-	for outlier in outliers:
-		print(', '.join(map(str, outlier)))
+	#print(len(outliers), 'Points:')
+	#for outlier in outliers:
+	#	print(', '.join(map(str, outlier)))
+
+def utility_main(data, epsilon, numPoints):
+	clusters, outliers = dbscan(data, epsilon, numPoints)
+	centroids = [findCentroid(cluster) for cluster in clusters]
+	outputClusterData(clusters, centroids)
+	outputOutlierData(outliers, len(data))
 
 # args: <filename> <epsilon> <numPoints>
 def main():

@@ -161,6 +161,10 @@ def showScatterPlot(clusters):
 
 	showScatterPlot2D(clusters) if dimension == 2 else showScatterPlot3D(clusters)
 
+def utility_main(data, numClusters):
+	clusters, centroids = kMeansClustering(data, numClusters)
+	return clusters, centroids
+
 def main():
 	data = parse.csv(sys.argv[1])
 	numClusters = int(sys.argv[2])
