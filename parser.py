@@ -5,7 +5,7 @@ import sys
 import os
 
 def strip_word(word):
-	return word.strip(',"()[]<>?.{}+=`~\n').lower()
+	return word.strip(',"()[]<>?.{}+=`~-\n').lower()
 
 def get_stop_words(path):
 	stop_words = set()
